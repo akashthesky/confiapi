@@ -2,8 +2,11 @@ from flask import Flask, jsonify, send_file
 from azure.storage.blob import BlobServiceClient
 import os
 from io import BytesIO
+from flask_cors import CORS
 
 app = Flask(__name__)
+CORS(app)
+
 
 # Replace with your Azure Blob Storage connection string and container name
 AZURE_STORAGE_CONNECTION_STRING = "DefaultEndpointsProtocol=https;AccountName=confistoragenew;AccountKey=CUVYY9IqDR22sF2gCiT95AyACpah67ZYByX2Je9tXfjYZ9JlUalcNtOOdCxlY7SKLlQGf0Y8bs3w+AStSsTOBA==;EndpointSuffix=core.windows.net"
