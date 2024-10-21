@@ -62,7 +62,7 @@ app.config['MAIL_PASSWORD'] = 'whpj qqdh ixvx lhij'  # Replace with your email p
 app.config['MAIL_DEFAULT_SENDER'] = ('Akash Dey', 'kshdey@gmail.com')
 
 mail = Mail(app)
-
+CORS(mail)
 @app.route('/send-email', methods=['POST'])
 def send_email():
     data = request.json
