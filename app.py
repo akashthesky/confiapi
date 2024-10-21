@@ -17,7 +17,7 @@ CORS(app)  # Handle CORS
 GMAIL_USER = 'kshdey@gmail.com'
 GMAIL_PASSWORD = 'whpj qqdh ixvx lhij'  # Use an app-specific password
 
-@app.route('/send-email', methods=['GET'])
+@app.route('/send-email', methods=['POST'])
 def send_email():
     try:
         # Get request data
