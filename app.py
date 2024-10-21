@@ -3,42 +3,50 @@ from azure.storage.blob import BlobServiceClient
 import os
 from io import BytesIO
 from flask_cors import CORS
-
-
-
 from flask import Flask, request, jsonify
-from flask_mail import Mail, Message
-app = Flask(__name__)
-CORS(app)
-# Email configuration (use your email server configuration)
-app.config['MAIL_SERVER'] = 'smtp.gmail.com'  # Replace with your SMTP server
-app.config['MAIL_PORT'] = 465  # Use appropriate port for your server
-app.config['MAIL_USE_SSL'] = True
-app.config['MAIL_USERNAME'] = 'kshdey@gmail.com'  # Replace with your email
-app.config['MAIL_PASSWORD'] = 'whpj qqdh ixvx lhij'  # Replace with your email password
-app.config['MAIL_DEFAULT_SENDER'] = ('Akash Dey', 'kshdey@gmail.com')
+from flask_cors import CORS
+import smtplib
+from email.mime.text import MIMEText
+from email.mime.multipart import MIMEMultipart
 
-mail = Mail(app)
+
+app = Flask(__name__)
+CORS(app)  # Handle CORS
+
+# Configure your Gmail credentials
+GMAIL_USER = 'kshdey@gmail.com'
+GMAIL_PASSWORD = 'whpj qqdh ixvx lhij'  # Use an app-specific password
 
 @app.route('/send-email', methods=['POST'])
 def send_email():
-    data = request.json
-    app.logger.info(f"Received request: {request.method}")
-    if not data or not all(k in data for k in ("to", "subject", "body")):
-        return jsonify({"error": "Missing required fields"}), 400
-    
     try:
-        msg = Message(
-            subject=data['subject'],
-            recipients=[data['to']],  # List of recipients
-            body=data['body']
-        )
-        
-        mail.send(msg)
-        return jsonify({"message": "Email sent successfully"}), 200
+        # Get request data
+        data = request.json
+        recipient_email = data['to']
+        subject = data['subject']
+        message_body = data['message']
+
+        # Create the email
+        msg = MIMEMultipart()
+        msg['From'] = GMAIL_USER
+        msg['To'] = recipient_email
+        msg['Subject'] = subject
+
+        # Attach message body
+        msg.attach(MIMEText(message_body, 'plain'))
+
+        # Send the email
+        server = smtplib.SMTP('smtp.gmail.com', 587)
+        server.starttls()  # Secure connection
+        server.login(GMAIL_USER, GMAIL_PASSWORD)
+        text = msg.as_string()
+        server.sendmail(GMAIL_USER, recipient_email, text)
+        server.quit()
+
+        return jsonify({"status": "success", "message": "Email sent successfully"}), 200
+
     except Exception as e:
-        app.logger.error(f"Error: {str(e)}")
-        return jsonify({"error": str(e)}), 500
+        return jsonify({"status": "error", "message": str(e)}), 500
 
 
 # Replace with your Azure Blob Storage connection string and container name
