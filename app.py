@@ -56,7 +56,7 @@ from flask_mail import Mail, Message
 # Email configuration (use your email server configuration)
 app.config['MAIL_SERVER'] = 'smtp.gmail.com'  # Replace with your SMTP server
 app.config['MAIL_PORT'] = 465  # Use appropriate port for your server
-app.config['MAIL_USE_SSL'] = True
+app.config['MAIL_USE_SSL'] = False
 app.config['MAIL_USERNAME'] = 'kshdey@gmail.com'  # Replace with your email
 app.config['MAIL_PASSWORD'] = 'whpj qqdh ixvx lhij'  # Replace with your email password
 app.config['MAIL_DEFAULT_SENDER'] = ('Akash Dey', 'kshdey@gmail.com')
